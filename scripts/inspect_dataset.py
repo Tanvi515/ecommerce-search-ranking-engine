@@ -261,11 +261,28 @@ def inspect_missing_values():
             f"({percentage:.2f}%) "
             f"| {present} present"
         )
-# if __name__ == "__main__":
-#     inspect_dataset()
+def inspect_product_samples(sample_count=3):
+    """Print a few real product records for manual inspection."""
+    printed = 0
 
-# if __name__ == "__main__":
-#     inspect_duplicates()
+    for file_path in get_metadata_files():
+        with gzip.open(file_path, "rt", encoding="utf-8") as file:
+            for line in file:
+                record = json.loads(line)
 
+                print("\n" + "=" * 50)
+                print(f"PRODUCT SAMPLE {printed + 1}")
+                print("=" * 50)
+
+                print(json.dumps(record, indent=2, ensure_ascii=False))
+
+                printed += 1
+
+                if printed >= sample_count:
+                    return
+                
 if __name__ == "__main__":
+    inspect_dataset()
+    inspect_product_samples()
+    inspect_duplicates()
     inspect_missing_values()
